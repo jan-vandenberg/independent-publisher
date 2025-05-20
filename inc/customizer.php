@@ -561,7 +561,10 @@ class IndependentPublisher_Customize {
 	 */
 	public static function generate_css( $selector, $style, $mod_name, $prefix = '', $postfix = '', $echo = true, $format = '%1$s { %2$s:%3$s; }' ) {
 		$return            = '';
-		$mod               = get_theme_mod( $mod_name, self::$default_colors[$mod_name] );
+		// Get the default value if available, or empty string if not
+		$default = isset( self::$default_colors[ $mod_name ] ) ? self::$default_colors[ $mod_name ] : '';
+		$mod               = get_theme_mod( $mod_name, $default );
+
 		if ( !empty( $mod ) ) {
 			$return = sprintf(
 				$format . "\n",
