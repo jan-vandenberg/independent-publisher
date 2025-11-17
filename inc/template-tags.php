@@ -185,13 +185,17 @@ if ( !function_exists( 'independent_publisher_mentions' ) ) :
 			foreach ( $mentions as $mention ) {
 				?>
 				<li <?php comment_class( '', $mention->comment_ID ); ?> id="li-comment-<?php echo $mention->comment_ID ?>">
-					<?php if ($mention->comment_type !== 'webmention') : // Webmentions already include author in the comment text ?>
-						<?php printf( '<cite class="fn">%s</cite>', get_comment_author_link( $mention->comment_ID ) ) ?>
-						<small><?php printf( '%1$s', get_comment_date() ); ?></small>
-					<?php endif; ?>
-					<?php comment_text($mention->comment_ID); ?>
+				    <?php if ( $mention ) : // ADDED NULL CHECK: Ensure $mention is a valid comment object ?>
+				        <?php if ($mention->comment_type !== 'webmention') : // Webmentions already include author in the comment text ?>
+				            <?php printf( '<cite class="fn">%s</cite>', get_comment_author_link( $mention->comment_ID ) ) ?>
+				            <small><?php printf( '%1$s', get_comment_date( '', $mention->comment_ID ) ); // ADDED $mention->comment_ID to specify the comment object ?></small>
+				        <?php endif; ?>
+				        <?php comment_text( $mention->comment_ID ); ?>
+				    <?php else : ?>
+				        <small><?php esc_html_e( 'Invalid mention object.', 'independent-publisher' ); ?></small>
+				    <?php endif; ?>
 				</li>
-				<?php
+			    <?php
 			}
 		}
 	}
